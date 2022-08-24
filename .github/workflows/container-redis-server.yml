@@ -1,0 +1,62 @@
+name: Redis Server Container Image Builds
+
+on:
+  push:
+    branches: [ main ]
+    tags: ["v*"]
+    path:
+      - redis-server/*
+      - .github/workflows/container-redis.yml
+  pull_request:
+    branches: [ main ]
+    path:
+      - redis-server/*
+      - .github/workflows/container-redis.yml
+  workflow_dispatch:
+  schedule:
+    # rebuild image every sunday
+    - cron: "0 0 * * 0"
+
+jobs:
+  redis-images:
+    name: Build and upload redis container images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        if: github.event_name != 'pull_request'
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Setup container meta information
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: greenbone/redis-server
+          labels: |
+            org.opencontainers.image.vendor=Greenbone
+            org.opencontainers.image.documentation=https://greenbone.github.io/docs/
+            org.opencontainers.image.base.name=debian:stable-slim
+          flavor: latest=false # no latest container tag for git tags
+          tags: |
+            # create container tag for git tags
+            type=ref,event=tag
+            type=ref,event=pr
+            # set latest for main branch pushes
+            type=raw,value=latest,enable={{is_default_branch}}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push Container image
+        uses: docker/build-push-action@v3
+        with:
+          context: redis-server
+          push: ${{ github.event_name != 'pull_request' }}
+          file: redis-server/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
