@@ -1,4 +1,4 @@
-FROM debian:oldstable-slim
+FROM debian:buster-slim
 
 # This will make apt-get install without question
 ARG DEBIAN_FRONTEND=noninteractive
