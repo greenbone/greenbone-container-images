@@ -3,15 +3,6 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: weekly
-    groups:
-      python-packages:
-        patterns:
-          - "*"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
       interval: "weekly"
     commit-message:
       prefix: "Deps"
