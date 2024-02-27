@@ -9,6 +9,7 @@ RUN apt-get update && \
     build-essential \
     cmake \
     doxygen \
+    graphviz \
     gcc \
     git \
     make \
