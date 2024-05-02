@@ -60,3 +60,35 @@ jobs:
           platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
+
+  redis-images-ghcr:
+    name: Build and upload redis container images to ghcr.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Container build and push
+        id: build-and-push
+        uses: greenbone/actions/container-build-push-generic@v3
+        with:
+          build-context: redis-server
+          build-docker-file: redis-server/Dockerfile
+          cosign-key: ${{ secrets.COSIGN_KEY_OPENSIGHT }}
+          cosign-key-password: ${{ secrets.COSIGN_KEY_PASSWORD_OPENSIGHT }}
+          # The tlog function does not currently support an ed25519 key.
+          cosign-tlog-upload: "false"
+          image-url: greenbone/redis-server
+          image-labels: |
+            org.opencontainers.image.vendor=Greenbone
+            org.opencontainers.image.documentation=https://greenbone.github.io/docs/
+            org.opencontainers.image.base.name=debian:stable-slim
+          image-tags: |
+            # create container tag for git tags
+            type=ref,event=tag
+            type=ref,event=pr
+            # set latest for main branch pushes
+            type=raw,value=latest,enable={{is_default_branch}}
+          registry: ${{ vars.IMAGE_REGISTRY }}
+          registry-username: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
