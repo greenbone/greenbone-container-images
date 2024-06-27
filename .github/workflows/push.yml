@@ -29,4 +29,13 @@ jobs:
         org.opencontainers.image.documentation=https://greenbone.github.io/docs/
         org.opencontainers.image.base.name=debian:stable-slim
       ref-name: ${{ inputs.ref-name }}
-    secrets: inherit
+    secrets:
+      COSIGN_KEY_OPENSIGHT: ${{ secrets.COSIGN_KEY_OPENSIGHT }}
+      COSIGN_KEY_PASSWORD_OPENSIGHT: ${{ secrets.COSIGN_KEY_OPENSIGHT }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GREENBONE_REGISTRY: ${{ secrets.GREENBONE_REGISTRY }}
+      GREENBONE_REGISTRY_USER: ${{ secrets.GREENBONE_REGISTRY_USER }}
+      GREENBONE_REGISTRY_TOKEN: ${{ secrets.GREENBONE_REGISTRY_TOKEN }}
+      MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+
