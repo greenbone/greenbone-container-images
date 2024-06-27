@@ -31,7 +31,7 @@ jobs:
       ref-name: ${{ inputs.ref-name }}
     secrets:
       COSIGN_KEY_OPENSIGHT: ${{ secrets.COSIGN_KEY_OPENSIGHT }}
-      COSIGN_KEY_PASSWORD_OPENSIGHT: ${{ secrets.COSIGN_KEY_OPENSIGHT }}
+      COSIGN_KEY_PASSWORD_OPENSIGHT: ${{ secrets.COSIGN_KEY_PASSWORD_OPENSIGHT }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GREENBONE_REGISTRY: ${{ secrets.GREENBONE_REGISTRY }}
