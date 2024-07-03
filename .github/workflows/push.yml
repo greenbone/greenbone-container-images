@@ -19,7 +19,7 @@ on:
 jobs:
   build-redis-server:
     name: Build and Push Redis Server to Greenbone Registry
-    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@2nd-multi-arch
+    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@pholthaus/anno
     with:
       build-docker-file: ./redis-server/Dockerfile
       build-context: ./redis-server
