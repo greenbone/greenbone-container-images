@@ -10,3 +10,13 @@ updates:
       actions:
         patterns:
           - "*"
+  - package-ecosystem: "docker"
+    directory: "/redis-server"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Deps"
+    groups:
+      docker:
+        patterns:
+          - "*"
