@@ -1,4 +1,4 @@
-FROM debian:stable-slim as builder
+FROM debian:stable-slim AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG GNUPGHOME="/var/lib/greenbone/gpg"
@@ -10,6 +10,7 @@ COPY ownertrust.txt /tmp/
 
 RUN apt-get -y update && apt-get -y upgrade && \
     apt-get --no-install-recommends --no-install-suggests -y install \
+    adduser \
     gpg \
     gpg-agent
 
