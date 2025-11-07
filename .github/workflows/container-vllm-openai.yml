@@ -9,7 +9,7 @@ on:
 jobs:
   republish-vllm-openai:
     name: Republish vllm-openai image
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-generic
 
     steps:
       - name: Login to Docker Hub
