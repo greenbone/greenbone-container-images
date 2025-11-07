@@ -29,6 +29,7 @@ jobs:
         org.opencontainers.image.documentation=https://greenbone.github.io/docs/
         org.opencontainers.image.base.name=debian:stable-slim
       ref-name: ${{ inputs.ref-name }}
+      service: openvas-redis
     secrets: inherit
 
   build-mqtt-broker:
