@@ -39,6 +39,7 @@ jobs:
             
       - name: Push image to Harbor
         run: |
+          ifconfig
           docker buildx imagetools create \
             --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/vllm-openai:latest \
             vllm/vllm-openai:latest
