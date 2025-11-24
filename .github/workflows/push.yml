@@ -58,7 +58,7 @@ jobs:
         org.opencontainers.image.documentation=https://greenbone.github.io/docs/
         org.opencontainers.image.base.name=busybox:stable
       ref-name: ${{ inputs.ref-name }}
-      service: gpg-data
+      service: openvas-gpg-data
     secrets: inherit
 
   build-doxygen:
