@@ -1,4 +1,4 @@
-FROM redis:8.2.3
+FROM redis:8.4.0
 
 # Copy in the custom Redis configuration
 COPY redis-openvas.conf /etc/redis/redis.conf
