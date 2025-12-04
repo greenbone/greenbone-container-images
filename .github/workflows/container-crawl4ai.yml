@@ -1,4 +1,4 @@
-name: Republish vllm-openai image
+name: Republish crawl4ai image
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   republish-vllm-openai:
-    name: Republish vllm-openai image
+    name: Republish crawl4ai image
     runs-on: self-hosted-generic
 
     steps:
@@ -41,11 +41,11 @@ jobs:
       - name: Push image to GHCR
         run: |
           docker buildx imagetools create \
-            --tag ghcr.io/greenbone/vllm-openai:latest \
-            vllm/vllm-openai:latest
+            --tag ghcr.io/greenbone/crawl4ai:latest \
+            unclecode/crawl4ai:latest
 
       - name: Push image to Harbor
         run: |
           docker buildx imagetools create \
-            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/vllm-openai:latest \
-            vllm/vllm-openai:latest
+            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/crawl4ai:latest \
+            unclecode/crawl4ai:latest
