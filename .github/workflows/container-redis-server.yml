@@ -26,7 +26,7 @@ permissions:
 jobs:
   redis-images:
     name: Build and upload redis container images
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-generic
 
     steps:
       - name: Checkout repository
@@ -81,7 +81,7 @@ jobs:
 
   redis-images-ghcr:
     name: Build and upload redis container images to ghcr.io
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-generic
 
     steps:
       - name: Checkout repository

@@ -20,7 +20,7 @@ on:
 jobs:
   doxygen-images:
     name: Build and upload doxygen container images
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-generic
 
     steps:
       - name: Checkout repository
