@@ -67,7 +67,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
       - name: Push image to Harbor
-        if: github.event_name != 'pull_request' }}
+        if: github.event_name != 'pull_request'
         run: |
           docker buildx imagetools create \
             --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/gpg-data:latest \
