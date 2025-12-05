@@ -30,6 +30,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Greenbone Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.GREENBONE_REGISTRY }}
+          username: ${{ secrets.GREENBONE_REGISTRY_USER }}
+          password: ${{ secrets.GREENBONE_REGISTRY_TOKEN }}
       - name: Setup container meta information
         id: meta
         uses: docker/metadata-action@v5
@@ -59,3 +65,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Push image to Harbor
+        if: github.event_name != 'pull_request' }}
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/gpg-data:latest \
+            greenbone/gpg-data:latest
