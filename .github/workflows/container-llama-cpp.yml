@@ -35,11 +35,11 @@ jobs:
       - name: Push image to GHCR
         run: |
           docker buildx imagetools create \
-            --tag ghcr.io/greenbone/llama.cpp:latest \
-            ghcr.io/ggml-org/llama.cpp:latest
+            --tag ghcr.io/greenbone/llama.cpp:server-cuda \
+            ghcr.io/ggml-org/llama.cpp:server-cuda
 
       - name: Push image to Harbor
         run: |
           docker buildx imagetools create \
-            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/llama.cpp:latest \
-            ghcr.io/ggml-org/llama.cpp:latest
+            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/llama.cpp:server-cuda \
+            ghcr.io/ggml-org/llama.cpp:server-cuda
