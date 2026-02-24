@@ -2,10 +2,10 @@ name: Build and Push to Greenbone Registry
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     tags: ["v*"]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
     inputs:
       ref-name:
@@ -70,6 +70,21 @@ jobs:
       image-url: community/doxygen
       image-labels: |
         org.opencontainers.image.vendor=Greenbone
+        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
+        org.opencontainers.image.base.name=debian:stable-slim
+      ref-name: ${{ inputs.ref-name }}
+    secrets: inherit
+
+  build-gvm-config:
+    name: Build and Push GVM Config to Greenbone Registry
+    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
+    with:
+      build-docker-file: ./gvm-config/Dockerfile
+      build-context: ./gvm-config
+      image-url: community/gvm-config
+      image-labels: |
+        org.opencontainers.image.vendor=Greenbone
+        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
         org.opencontainers.image.base.name=debian:stable-slim
       ref-name: ${{ inputs.ref-name }}
     secrets: inherit
