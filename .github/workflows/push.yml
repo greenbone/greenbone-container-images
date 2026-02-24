@@ -61,20 +61,6 @@ jobs:
       service: openvas-gpg-data
     secrets: inherit
 
-  build-doxygen:
-    name: Build and Push Doxygen to Greenbone Registry
-    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
-    with:
-      build-docker-file: ./doxygen/doxygen.Dockerfile
-      build-context: ./doxygen
-      image-url: community/doxygen
-      image-labels: |
-        org.opencontainers.image.vendor=Greenbone
-        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
-        org.opencontainers.image.base.name=debian:stable-slim
-      ref-name: ${{ inputs.ref-name }}
-    secrets: inherit
-
   build-gvm-config:
     name: Build and Push GVM Config to Greenbone Registry
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
