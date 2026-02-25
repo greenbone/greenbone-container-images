@@ -26,11 +26,11 @@ printf "\nStarting gvm-config... "
 
 if [ -d "${NGINX_TEMPLATES_MOUNT_PATH}" ] && [ -n "${ENABLE_NGINX_CONFIG}" ] && [ "${ENABLE_NGINX_CONFIG}" -eq 1 ]; then
         echo "copying nginx config files from ${STORAGE_PATH} to ${NGINX_TEMPLATES_MOUNT_PATH}"
-        cp -v -f "${STORAGE_PATH}/default.conf.template" "${NGINX_TEMPLATES_MOUNT_PATH}"
+        cp -v -f "${STORAGE_PATH}"/*.conf.template "${NGINX_TEMPLATES_MOUNT_PATH}"
 
         if [ -n "${VERBOSE}" ]; then
             echo "nginx config file content:"
-            cat "${NGINX_TEMPLATES_MOUNT_PATH}/default.conf.template"
+            cat "${NGINX_TEMPLATES_MOUNT_PATH}/"*.conf.template
         fi
 fi
 
