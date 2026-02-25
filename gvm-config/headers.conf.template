@@ -1,0 +1,4 @@
+add_header Access-Control-Allow-Origin "${NGINX_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER}" always;
+add_header Content-Security-Policy "${NGINX_CONTENT_SECURITY_POLICY_HEADER}";
+add_header Strict-Transport-Security "${NGINX_STRICT_TRANSPORT_SECURITY_HEADER}" always;
+add_header X-Frame-Options "${NGINX_X_FRAME_OPTIONS_HEADER}";
