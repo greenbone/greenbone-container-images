@@ -40,6 +40,11 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
+  location ~ ^/config\.(js|ts) {
+    root /usr/share/nginx/html;
+    try_files $uri =404;
+  }
+
   location / {
     root /usr/share/nginx/html;
     index index.html;
