@@ -16,6 +16,8 @@ server {
 }
 
 server {
+  client_max_body_size 1000m;
+
   listen ${NGINX_HTTPS_PORT} ssl;
   server_name ${NGINX_HOST};
 
