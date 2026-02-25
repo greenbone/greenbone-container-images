@@ -2,14 +2,17 @@ name: GPG Data Container Image Builds
 
 on:
   push:
-    branches: [ main ]
-    tags: ["v*"]
-    path:
+    branches:
+      - main
+    tags:
+      - "v*"
+    paths:
       - gpg-data/*
       - .github/workflows/container-gpg-data.yml
   pull_request:
-    branches: [ main ]
-    path:
+    branches:
+      - main
+    paths:
       - gpg-data/*
       - .github/workflows/container-gpg-data.yml
   workflow_dispatch:
@@ -24,12 +27,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Login to Docker Registry
-        uses: docker/login-action@v3
-        if: github.event_name != 'pull_request'
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Login to Greenbone Registry
         uses: docker/login-action@v3
         with:
@@ -40,7 +37,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: greenbone/gpg-data
+          images: |
+            ${{ vars.GREENBONE_REGISTRY }}/community/gpg-data
           labels: |
             org.opencontainers.image.vendor=Greenbone
             org.opencontainers.image.documentation=https://greenbone.github.io/docs/
@@ -65,10 +63,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-
-      - name: Push image to Harbor
-        if: github.event_name != 'pull_request'
-        run: |
-          docker buildx imagetools create \
-            --tag ${{ vars.GREENBONE_REGISTRY }}/openvas-ai/gpg-data:latest \
-            greenbone/gpg-data:latest

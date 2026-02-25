@@ -1,4 +1,4 @@
-name: Redis Server Container Image Builds
+name: GVM Config Container Image Builds
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
     tags:
       - "v*"
     paths:
-      - redis-server/*
-      - .github/workflows/container-redis-server.yml
+      - gvm-config/*
+      - .github/workflows/container-gvm-config.yml
   pull_request:
     branches:
       - main
     paths:
-      - redis-server/*
-      - .github/workflows/container-redis-server.yml
+      - gvm-config/*
+      - .github/workflows/container-gvm-config.yml
   workflow_dispatch:
   schedule:
     # rebuild image every sunday
@@ -27,13 +27,19 @@ permissions:
   pull-requests: write
 
 jobs:
-  redis-images:
-    name: Build and upload redis container images
+  gvm-config-images:
+    name: Build and upload GVM config container image
     runs-on: self-hosted-generic
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Login to Greenbone Registry
         uses: docker/login-action@v3
         with:
@@ -45,7 +51,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ vars.GREENBONE_REGISTRY }}/community/redis-server
+            ghcr.io/greenbone/gvm-config
+            ${{ vars.GREENBONE_REGISTRY }}/community/gvm-config
           labels: |
             org.opencontainers.image.vendor=Greenbone
             org.opencontainers.image.documentation=https://greenbone.github.io/docs/
@@ -64,9 +71,9 @@ jobs:
       - name: Build and push Container image
         uses: docker/build-push-action@v6
         with:
-          context: redis-server
+          context: gvm-config
           push: ${{ github.event_name != 'pull_request' }}
-          file: redis-server/Dockerfile
+          file: gvm-config/Dockerfile
           platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
