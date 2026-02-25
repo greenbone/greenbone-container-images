@@ -1,8 +1,10 @@
-![Greenbone Logo](https://www.greenbone.net/wp-content/uploads/gb_new-logo_horizontal_rgb_small.png)
+![Greenbone Logo](https://www.greenbone.net/wp-content/uploads/greenbone-logo-2025-300x77.png)
 
 # Additional Container Images
 
 This repository contains Dockerfiles describing additional services required to
 run various containers/modules/services/... build by Greenbone.
 
-The images are publicly available at https://hub.docker.com/u/greenbone/.
+The images are *pullable* from registry.community.greenbone.net/community/.
+
+For example `docker pull registry.community.greenbone.net/community/gpg-data`
