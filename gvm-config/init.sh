@@ -1,13 +1,13 @@
 #!/bin/sh
 set -e
 
-STORAGE_PATH=${STORAGE_PATH:-"/var/lib/gvm/gvm-config/"}
+STORAGE_PATH=${STORAGE_PATH:-"/var/lib/gvm/gvm-config"}
 STATE_FILE=${STATE_FILE:-"/run/gvm-config/copying-gvm-config-files.done"}
 
 NGINX_HOST=${NGINX_HOST:-localhost}
 NGINX_PORT=${NGINX_PORT:-443}
 NGINX_MOUNT_PATH=${NGINX_MOUNT_PATH:-"/mnt/nginx"}
-NGINX_TEMPLATES_MOUNT_PATH=${NGINX_TEMPLATES_MOUNT_PATH:-"${NGINX_MOUNT_PATH}/templates"}
+NGINX_CONFIGS_MOUNT_PATH=${NGINX_CONFIGS_MOUNT_PATH:-"${NGINX_MOUNT_PATH}/configs"}
 NGINX_CERTS_MOUNT_PATH=${NGINX_CERTS_MOUNT_PATH:-"${NGINX_MOUNT_PATH}/certs"}
 NGINX_SERVER_CERT=${NGINX_SERVER_CERT:-"${NGINX_CERTS_MOUNT_PATH}/server.cert.pem"}
 NGINX_SERVER_KEY=${NGINX_SERVER_KEY:-"${NGINX_CERTS_MOUNT_PATH}/server.key"}
@@ -24,17 +24,18 @@ fi
 
 printf "\nStarting gvm-config... "
 
-if [ -d "${NGINX_TEMPLATES_MOUNT_PATH}" ] && [ -n "${ENABLE_NGINX_CONFIG}" ] && [ "${ENABLE_NGINX_CONFIG}" -eq 1 ]; then
-        echo "copying nginx config files from ${STORAGE_PATH} to ${NGINX_TEMPLATES_MOUNT_PATH}"
-        cp -v -f "${STORAGE_PATH}"/*.conf.template "${NGINX_TEMPLATES_MOUNT_PATH}"
+if [ -d "${NGINX_CONFIGS_MOUNT_PATH}" ] && [ "${ENABLE_NGINX_CONFIG}" = "true" ]; then
+        echo "Creating nginx config files at ${NGINX_CONFIGS_MOUNT_PATH}"
+        cd "${STORAGE_PATH}/templates"
+        /usr/local/bin/gvm-config nginx-config --source "${STORAGE_PATH}/templates" --destination "${NGINX_CONFIGS_MOUNT_PATH}"
 
         if [ -n "${VERBOSE}" ]; then
-            echo "nginx config file content:"
-            cat "${NGINX_TEMPLATES_MOUNT_PATH}/"*.conf.template
+            echo "nginx config files content:"
+            cat "${NGINX_CONFIGS_MOUNT_PATH}/"*.conf
         fi
 fi
 
-if [ -d "${NGINX_CERTS_MOUNT_PATH}" ] && [ -n "${ENABLE_TLS_GENERATION}" ] && [ "${ENABLE_TLS_GENERATION}" -eq 1 ]; then
+if [ -d "${NGINX_CERTS_MOUNT_PATH}" ] && [ "${ENABLE_TLS_GENERATION}" = "true" ]; then
     if [ ! -f "${NGINX_SERVER_CERT}" ] || [ ! -f "${NGINX_SERVER_KEY}" ] ; then
         echo "generating TLS certificates"
         cd "${STORAGE_PATH}/certs"
