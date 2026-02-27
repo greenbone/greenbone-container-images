@@ -2,3 +2,5 @@
 *.pem
 *.key
 *.crt
+
+target/

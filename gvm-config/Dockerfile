@@ -1,3 +1,10 @@
+FROM rust AS builder
+
+WORKDIR /source
+COPY Cargo.* /source/
+COPY src /source/src
+RUN cargo install --path .
+
 FROM debian:stable-slim
 
 ARG storage_path="/var/lib/gvm/gvm-config/"
@@ -16,8 +23,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
-COPY . ${STORAGE_PATH}
-RUN mv ${STORAGE_PATH}/init.sh /bin/init.sh
+COPY --from=builder /usr/local/cargo/bin/* /usr/local/bin/
+COPY certs ${STORAGE_PATH}/certs
+COPY templates ${STORAGE_PATH}/templates
+COPY init.sh /bin/init.sh
+
 RUN chmod 755 /bin/init.sh
 
 HEALTHCHECK --start-period=5s CMD test -e $STATE_FILE
