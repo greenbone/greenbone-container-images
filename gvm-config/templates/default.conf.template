@@ -2,29 +2,32 @@ upstream gsad {
   server gsad:9392 max_fails=3 fail_timeout=30s;
 }
 
+{%- if enable_feed_key_service %}
+
 upstream feed-key {
   server feed-key:3000 max_fails=3 fail_timeout=30s;
   resolver 127.0.0.11 valid=30s;
   resolver_timeout 10s;
 }
+{%- endif %}
 
 http2 on;
 
 server {
-    listen ${NGINX_HTTP_PORT};
-    return 301 https://$host:${NGINX_HTTPS_PORT}$request_uri;
+    listen {{nginx_http_port}};
+    return 301 https://$host:{{nginx_https_port}}$request_uri;
 }
 
 server {
   client_max_body_size 1000m;
 
-  listen ${NGINX_HTTPS_PORT} ssl;
-  server_name ${NGINX_HOST};
+  listen {{nginx_https_port}} ssl;
+  server_name {{nginx_host}};
 
   include /etc/nginx/conf.d/headers.conf;
 
-  ssl_certificate ${NGINX_SERVER_CERT};
-  ssl_certificate_key ${NGINX_SERVER_KEY};
+  ssl_certificate {{nginx_server_certificate}};
+  ssl_certificate_key {{nginx_server_key}};
 
   location ~ ^/(gmp|system_report|logout) {
     proxy_pass http://gsad;
@@ -38,6 +41,8 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
+  {%- if enable_feed_key_service %}
+
   location /service/feed-key/ {
     proxy_pass http://feed-key/;
     proxy_set_header Host $host;
@@ -45,6 +50,7 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
   }
+  {%- endif %}
 
   location ~ ^/config\.(js|ts) {
     root /usr/share/nginx/html;

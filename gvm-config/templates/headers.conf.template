@@ -1,0 +1,5 @@
+add_header Access-Control-Allow-Origin "{{nginx_access_control_allow_origin_header}}" always;
+add_header Access-Control-Allow-Credentials "true" always;
+add_header Content-Security-Policy "{{nginx_content_security_policy_header}}";
+add_header Strict-Transport-Security "{{nginx_strict_transport_security_header}}" always;
+add_header X-Frame-Options "{{nginx_x_frame_options_header}}";
