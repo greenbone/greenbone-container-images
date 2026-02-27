@@ -20,3 +20,14 @@ updates:
       docker:
         patterns:
           - "*"
+
+  - package-ecosystem: "cargo"
+    directory: "/gvm-config"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Deps"
+    groups:
+      cargo:
+        patterns:
+          - "*"
