@@ -11,8 +11,6 @@ upstream feed-key {
 }
 {%- endif %}
 
-http2 on;
-
 server {
     listen {{nginx_http_port}};
     return 301 https://$host:{{nginx_https_port}}$request_uri;
