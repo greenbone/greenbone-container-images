@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, path::Path};
 
 use tera::{Context, Tera};
 
@@ -37,6 +37,21 @@ fn create_context_from_template_command(cmd: &cli::NginxCommand) -> Context {
     context
 }
 
+fn create_directory(directory: &Path) -> std::io::Result<()> {
+    if !directory.exists() {
+        std::fs::create_dir_all(directory)?;
+    } else if !directory.is_dir() {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            format!(
+                "The path '{}' exists but is not a directory.",
+                directory.display()
+            ),
+        ));
+    }
+    Ok(())
+}
+
 fn main() {
     let cli = Cli::default();
 
@@ -59,28 +74,22 @@ fn main() {
                     std::process::exit(1);
                 }
             };
-
-            if !destination.exists() {
-                if let Err(e) = std::fs::create_dir_all(&destination) {
-                    println!(
-                        "Error: Failed to create destination directory '{}': {}",
-                        destination.display(),
-                        e
-                    );
-                    std::process::exit(1);
-                }
-            } else if destination.exists() && !destination.is_dir() {
-                println!(
-                    "Error: The destination path '{}' is not a directory.",
-                    destination.display()
-                );
-                std::process::exit(1);
-            }
-
             let mut has_error = false;
             for name in tera.get_template_names() {
                 let mut rendered_path = destination.join(name);
+                let parent_dir = destination.parent().unwrap();
                 rendered_path.set_extension("");
+
+                if let Err(e) = create_directory(&parent_dir) {
+                    println!(
+                        "Error: Failed to create directory '{}': {}",
+                        parent_dir.display(),
+                        e
+                    );
+                    has_error = true;
+                    continue;
+                }
+
                 let rendered_file = File::create(&rendered_path);
                 if rendered_file.is_err() {
                     println!(
