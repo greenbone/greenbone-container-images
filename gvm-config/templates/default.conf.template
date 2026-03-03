@@ -11,15 +11,24 @@ upstream feed-key {
 }
 {%- endif %}
 
+{%- if enable_http_redirect %}
+
 server {
     listen {{nginx_http_port}};
     return 301 https://$host:{{nginx_https_port}}$request_uri;
 }
+{%- endif %}
 
 server {
   client_max_body_size 1000m;
 
   listen {{nginx_https_port}} ssl;
+
+  {%- if enable_http %}
+
+  listen {{nginx_http_port}};
+  {%- endif %}
+
   server_name {{nginx_host}};
 
   include /etc/nginx/conf.d/headers.conf;

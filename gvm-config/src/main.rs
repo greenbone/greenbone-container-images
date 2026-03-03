@@ -34,6 +34,10 @@ fn create_context_from_template_command(cmd: &cli::NginxCommand) -> Context {
         "nginx_x_frame_options_header",
         &cmd.nginx_x_frame_options_header,
     );
+    let enable_http_redirect =
+        cmd.http_service.enable_http_redirect || !cmd.http_service.enable_http;
+    context.insert("enable_http_redirect", &enable_http_redirect);
+    context.insert("enable_http", &!enable_http_redirect);
     context
 }
 
