@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/cargo/bin/* /usr/local/bin/
+COPY --from=builder /usr/local/cargo/bin/gvm-config /usr/local/bin/
 COPY certs ${STORAGE_PATH}/certs
 COPY templates ${STORAGE_PATH}/templates
 COPY init.sh /bin/init.sh
