@@ -12,3 +12,4 @@ For example `docker pull registry.community.greenbone.net/community/gpg-data`
 For more details please take a look at
 
 - [gvm-config](./gvm-config/README.md)
+- [nginx](./nginx/README.md)
