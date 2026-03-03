@@ -8,3 +8,7 @@ run various containers/modules/services/... build by Greenbone.
 The images are *pullable* from registry.community.greenbone.net/community/.
 
 For example `docker pull registry.community.greenbone.net/community/gpg-data`
+
+For more details please take a look at
+
+- [gvm-config](./gvm-config/README.md)
