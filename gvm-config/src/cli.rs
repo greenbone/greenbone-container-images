@@ -102,6 +102,8 @@ impl Default for Cli {
 mod tests {
     use std::env;
 
+    use serial_test::serial;
+
     use super::*;
 
     struct WithEnv {
@@ -166,6 +168,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_destination() {
         let cmd = parse_nginx_from(vec!["--destination", "custom_out"]);
         assert_eq!(cmd.destination, PathBuf::from("custom_out"));
@@ -176,6 +179,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_source() {
         let cmd = parse_nginx_from(vec!["--source", "custom_source"]);
         assert_eq!(cmd.source, PathBuf::from("custom_source"));
@@ -186,6 +190,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_enable_feed_key_service() {
         let cmd = parse_nginx_from(vec!["--enable-feed-key-service"]);
         assert!(cmd.enable_feed_key_service);
@@ -196,6 +201,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_enable_http_redirect() {
         let cmd = parse_nginx_from(vec!["--enable-http-redirect"]);
         assert!(cmd.http_service.enable_http_redirect);
@@ -208,6 +214,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_enable_http() {
         let cmd = parse_nginx_from(vec!["--enable-http"]);
         assert!(cmd.http_service.enable_http);
@@ -228,6 +235,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_host() {
         let cmd = parse_nginx_from(vec!["--nginx-host", "example.com"]);
         assert_eq!(cmd.nginx_host, "example.com");
@@ -238,6 +246,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_http_port() {
         let cmd = parse_nginx_from(vec!["--nginx-http-port", "8080"]);
         assert_eq!(cmd.nginx_http_port, 8080);
@@ -248,6 +257,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_https_port() {
         let cmd = parse_nginx_from(vec!["--nginx-https-port", "8443"]);
         assert_eq!(cmd.nginx_https_port, 8443);
@@ -259,6 +269,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_server_certificate() {
         let cmd = parse_nginx_from(vec!["--nginx-server-certificate", "/path/to/cert.pem"]);
         assert_eq!(cmd.nginx_server_certificate, "/path/to/cert.pem");
@@ -269,6 +280,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_server_key() {
         let cmd = parse_nginx_from(vec!["--nginx-server-key", "/path/to/key.pem"]);
         assert_eq!(cmd.nginx_server_key, "/path/to/key.pem");
@@ -279,6 +291,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_access_control_allow_origin_header() {
         let cmd = parse_nginx_from(vec![
             "--nginx-access-control-allow-origin-header",
@@ -301,6 +314,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_content_security_policy_header() {
         let cmd = parse_nginx_from(vec![
             "--nginx-content-security-policy-header",
@@ -320,6 +334,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_strict_transport_security_header() {
         let cmd = parse_nginx_from(vec![
             "--nginx-strict-transport-security-header",
@@ -333,6 +348,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_should_parse_nginx_x_frame_options_header() {
         let cmd = parse_nginx_from(vec!["--nginx-x-frame-options-header", "DENY"]);
         assert_eq!(cmd.nginx_x_frame_options_header, "DENY");
