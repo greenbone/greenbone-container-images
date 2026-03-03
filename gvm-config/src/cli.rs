@@ -30,40 +30,66 @@ pub struct NginxCommand {
     #[arg(long, env = "TEMPLATE_DESTINATION", default_value_os_t = PathBuf::from("out"))]
     pub destination: PathBuf,
 
-    /// Source directory for the templates. Defaults to "templates" in the current working directory.
+    /// Source directory for the templates.
     #[arg(long, env = "TEMPLATE_SOURCE", default_value_os_t = PathBuf::from("templates"))]
     pub source: PathBuf,
 
-    /// Optional environment variable to enable feed key service.
+    /// Enable the feed key service. Not enabled by default.
     #[arg(long, env = "ENABLE_FEED_KEY_SERVICE", default_value_t = false)]
     pub enable_feed_key_service: bool,
 
+    #[command(flatten)]
+    pub http_service: HttpService,
+
+    /// Hostname or IP address that nginx will listen on.
     #[arg(long, env = "NGINX_HOST", default_value_t = String::from(DEFAULT_NGINX_HOST))]
     pub nginx_host: String,
 
+    /// Port for HTTP traffic.
     #[arg(long, env = "NGINX_HTTP_PORT", default_value_t = DEFAULT_NGINX_HTTP_PORT)]
     pub nginx_http_port: u16,
 
+    /// Port for HTTPS traffic.
     #[arg(long, env = "NGINX_HTTPS_PORT", default_value_t = DEFAULT_NGINX_HTTPS_PORT)]
     pub nginx_https_port: u16,
 
+    /// Path to the TLS certificate file for the nginx server.
     #[arg(long, env ="NGINX_SERVER_CERTIFICATE", default_value_t = String::from(DEFAULT_NGINX_SERVER_CERTIFICATE))]
     pub nginx_server_certificate: String,
 
+    /// Path to the TLS private key file for the nginx server.
     #[arg(long, env ="NGINX_SERVER_KEY", default_value_t = String::from(DEFAULT_NGINX_SERVER_KEY))]
     pub nginx_server_key: String,
 
+    /// Value for the Access-Control-Allow-Origin header. Default is `https://<nginx_host>:<nginx_https_port>`.
     #[arg(long, env = "NGINX_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER")]
     pub nginx_access_control_allow_origin_header: Option<String>,
 
+    /// Value for the Content-Security-Policy header.
     #[arg(long, env = "NGINX_CONTENT_SECURITY_POLICY_HEADER", default_value_t = String::from(DEFAULT_NGINX_CONTENT_SECURITY_POLICY_HEADER))]
     pub nginx_content_security_policy_header: String,
 
+    /// Value for the Strict-Transport-Security header.
     #[arg(long, env = "NGINX_STRICT_TRANSPORT_SECURITY_HEADER", default_value_t = String::from(DEFAULT_NGINX_STRICT_TRANSPORT_SECURITY_HEADER))]
     pub nginx_strict_transport_security_header: String,
 
+    /// Value for the X-Frame-Options header.
     #[arg(long, env = "NGINX_X_FRAME_OPTIONS_HEADER", default_value_t = String::from(DEFAULT_NGINX_X_FRAME_OPTIONS_HEADER))]
     pub nginx_x_frame_options_header: String,
+}
+
+#[derive(Args)]
+#[group(multiple = false)]
+pub struct HttpService {
+    /// Enable HTTP to HTTPS redirection. This is typically used in production environments.
+    /// Cannot be enabled together with `--enable-http`.
+    #[arg(long, env = "NGINX_ENABLE_HTTP_REDIRECT")]
+    pub enable_http_redirect: bool,
+
+    /// Enable serving on HTTP in addition to HTTPS. This is typically used for development purposes.
+    /// Cannot be enabled together with `--enable-http-redirect`.
+    #[arg(long, env = "NGINX_ENABLE_HTTP")]
+    pub enable_http: bool,
 }
 
 impl Default for Cli {
@@ -135,6 +161,8 @@ mod tests {
             DEFAULT_NGINX_X_FRAME_OPTIONS_HEADER
         );
         assert_eq!(cmd.nginx_access_control_allow_origin_header, None);
+        assert!(!cmd.http_service.enable_http_redirect);
+        assert!(!cmd.http_service.enable_http);
     }
 
     #[test]
@@ -165,6 +193,38 @@ mod tests {
         let _env = WithEnv::new("ENABLE_FEED_KEY_SERVICE", "true");
         let cmd = parse_nginx_from(vec![]);
         assert!(cmd.enable_feed_key_service);
+    }
+
+    #[test]
+    fn test_should_parse_enable_http_redirect() {
+        let cmd = parse_nginx_from(vec!["--enable-http-redirect"]);
+        assert!(cmd.http_service.enable_http_redirect);
+        assert!(!cmd.http_service.enable_http);
+
+        let _env = WithEnv::new("NGINX_ENABLE_HTTP_REDIRECT", "true");
+        let cmd = parse_nginx_from(vec![]);
+        assert!(cmd.http_service.enable_http_redirect);
+        assert!(!cmd.http_service.enable_http);
+    }
+
+    #[test]
+    fn test_should_parse_enable_http() {
+        let cmd = parse_nginx_from(vec!["--enable-http"]);
+        assert!(cmd.http_service.enable_http);
+        assert!(!cmd.http_service.enable_http_redirect);
+
+        let _env = WithEnv::new("NGINX_ENABLE_HTTP", "true");
+        let cmd = parse_nginx_from(vec![]);
+        assert!(cmd.http_service.enable_http);
+        assert!(!cmd.http_service.enable_http_redirect);
+    }
+
+    #[test]
+    fn test_should_fail_on_conflicting_http_options() {
+        let result = try_parse_nginx_from(vec!["--enable-http", "--enable-http-redirect"]);
+        assert!(result.is_err());
+        let err = result.err().unwrap();
+        assert_eq!(err.kind(), clap::error::ErrorKind::ArgumentConflict);
     }
 
     #[test]
