@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-redis-server:
-    name: Build and Push Redis Server to Greenbone Registry
+    name: Push Redis Server to Automatix
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
     with:
       build-docker-file: ./redis-server/Dockerfile
@@ -22,7 +22,7 @@ jobs:
     secrets: inherit
 
   build-gpg-data:
-    name: Build and Push gpg Data to Greenbone Registry
+    name: Push GPG Data to Automatix
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
     with:
       build-docker-file: ./gpg-data/Dockerfile
