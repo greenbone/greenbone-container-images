@@ -23,6 +23,7 @@ jobs:
 
   build-gpg-data:
     name: Push GPG Data to Automatix
+    needs: build-redis-server
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
     with:
       build-docker-file: ./gpg-data/Dockerfile
@@ -37,6 +38,9 @@ jobs:
 
   build-gsa-nginx:
     name: Push GSA Nginx to Automatix
+    needs:
+      - build-redis-server
+      - build-gpg-data
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
     with:
       build-docker-file: ./nginx/Dockerfile
