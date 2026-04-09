@@ -53,6 +53,15 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD pgrep 
 
 ## Getting Started
 
+**If you are sharing a Unix socket across multiple containers, use the Compose feature to make the group for the Unix socket accessible to the SSH server.**
+
+```bash
+services:
+  sshd:
+    group_add:
+      - 1001 # GVMD Unix Socket Group 
+```
+
 ### Build the Docker Image
 
 ```bash
