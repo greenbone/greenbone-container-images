@@ -20,11 +20,8 @@ RUN apt-get update && \
 # Copy custom SSH server config and init script
 # - sshd_config: custom SSH server configuration
 # - init.sh: entrypoint script for container initialization
-#COPY --chown=0:0 --chmod=0644 sshd_config /etc/ssh/sshd_config
-#COPY --chown=0:0 --chmod=0755 init.sh /usr/bin/init.sh
-COPY sshd_config /etc/ssh/sshd_config
-COPY init.sh /usr/bin/init.sh
-RUN chmod 0600 /etc/ssh/sshd_config && chmod 0755 /usr/bin/init.sh && chown gvm:gvm /etc/ssh/sshd_config
+COPY --chown=0:0 --chmod=0644 sshd_config /etc/ssh/sshd_config
+COPY --chown=0:0 --chmod=0755 init.sh /usr/bin/init.sh
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD pgrep sshd || exit 1
 
