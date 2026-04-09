@@ -7,6 +7,20 @@ on:
     tags: ["v*"]
 
 jobs:
+  build-sshd:
+    name: Push SSHD Container to Automatix
+    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
+    with:
+      build-docker-file: ./sshd/Dockerfile
+      build-context: ./sshd
+      image-url: openvas-scan-dev/sshd
+      image-labels: |
+        org.opencontainers.image.vendor=Greenbone
+        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
+        org.opencontainers.image.base.name=debian:stable-slim
+      service: openvas-sshd
+    secrets: inherit
+
   build-redis-server:
     name: Push Redis Server to Automatix
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
