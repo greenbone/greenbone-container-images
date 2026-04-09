@@ -15,7 +15,8 @@ RUN apt-get update && \
     groupadd -g 10041 gvm && \
     useradd -m -d /home/gvm -s /bin/false -u 10041 -g 10041 gvm && \
     install -d -o gvm -g gvm -m 700 /home/gvm/.ssh && \
-    chown gvm:gvm -R /etc/ssh
+    chmod 0755 /etc/ssh && \
+    chmod 0644 -R /etc/ssh/*
 
 # Copy custom SSH server config and init script
 # - sshd_config: custom SSH server configuration
