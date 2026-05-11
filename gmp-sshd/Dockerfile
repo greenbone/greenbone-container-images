@@ -11,9 +11,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends socat openssh-server net-tools tini gawk && \
     rm -rf /var/lib/apt/lists/* && \
     groupadd -g 1001 gmp && \
-    useradd -m -d /home/gmp -u 1001 -g 1001 gmp && \
-    echo "gmp:gmp" | chpasswd && \
-    passwd -u gmp && \
+    useradd -m -d /home/gmp -u 1001 -g 1001 -s /bin/bash gmp && \
+    passwd -d gmp && \
     install -d -o gmp -g gmp -m 700 /home/gmp/.ssh && \
     install -d -o gmp -g gmp -m 700 /home/gmp/host_keys && \
     chmod 0444 /etc/shadow
