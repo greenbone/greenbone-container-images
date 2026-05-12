@@ -1,0 +1,95 @@
+# ==========================================
+# Basic Connectivity & Rootless Setup
+# ==========================================
+
+Port 2222
+ListenAddress 0.0.0.0
+PidFile /home/gmp/sshd.pid
+
+# Host Keys
+HostKey /home/gmp/host_keys/ssh_host_ed25519_key
+
+StrictModes no
+
+SyslogFacility USER
+LogLevel VERBOSE
+
+# ==========================================
+# Authentication: PASSWORD + KEY
+# ==========================================
+
+AllowUsers gmp
+
+PermitRootLogin no
+PermitEmptyPasswords no
+
+PasswordAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+KbdInteractiveAuthentication no
+ChallengeResponseAuthentication no
+
+UsePAM no
+
+# Optional:
+# Require BOTH key and password
+# AuthenticationMethods publickey,password
+
+# ==========================================
+# Forwarding & Tunneling
+# ==========================================
+
+AllowTcpForwarding no
+AllowStreamLocalForwarding no
+GatewayPorts no
+PermitTunnel no
+
+# ==========================================
+# Attack Surface Reduction
+# ==========================================
+
+X11Forwarding no
+AllowAgentForwarding no
+
+PermitTTY yes
+PermitUserEnvironment no
+
+# Disable unnecessary features
+PrintMotd no
+PrintLastLog no
+IgnoreUserKnownHosts yes
+UseDNS no
+Compression no
+TCPKeepAlive no
+
+# ==========================================
+# Brute Force / Session Limits
+# ==========================================
+
+MaxAuthTries 3
+MaxSessions 20
+LoginGraceTime 30
+
+ClientAliveInterval 100
+ClientAliveCountMax 3
+
+# Optional connection throttling
+MaxStartups 20:30:40
+
+# ==========================================
+# Cryptography
+# ==========================================
+
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+
+# ==========================================
+# Users
+# ==========================================
+
+Match User gmp
+    AllowUsers gmp
+    PermitEmptyPasswords yes
+    ForceCommand /usr/bin/socat STDIO UNIX-CONNECT:/run/gvmd/gvmd.sock
