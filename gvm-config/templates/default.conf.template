@@ -38,7 +38,7 @@ server {
   ssl_certificate {{nginx_server_certificate}};
   ssl_certificate_key {{nginx_server_key}};
 
-  location ~ ^/(gmp|system_report|logout) {
+  location ~ ^/(gmp|system_report|logout|login) {
     # Handle preflight requests
     if ($request_method = OPTIONS) {
           add_header Access-Control-Allow-Origin "{{nginx_access_control_allow_origin_header}}" always;
