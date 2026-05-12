@@ -71,11 +71,11 @@ MaxAuthTries 3
 MaxSessions 20
 LoginGraceTime 30
 
-ClientAliveInterval 300
-ClientAliveCountMax 0
+ClientAliveInterval 100
+ClientAliveCountMax 3
 
 # Optional connection throttling
-MaxStartups 2:30:4
+MaxStartups 20:30:40
 
 # ==========================================
 # Cryptography
