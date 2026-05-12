@@ -10,6 +10,7 @@ const DEFAULT_NGINX_SERVER_KEY: &str = "/etc/nginx/certs/server.key";
 const DEFAULT_NGINX_CONTENT_SECURITY_POLICY_HEADER: &str = "default-src 'none'; object-src 'none'; base-uri 'none'; connect-src 'self'; script-src 'self'; script-src-elem 'self' 'unsafe-inline';frame-ancestors 'none'; form-action 'self'; style-src-elem 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self';img-src 'self' blob: data:;";
 const DEFAULT_NGINX_STRICT_TRANSPORT_SECURITY_HEADER: &str = "max-age=31536000; includeSubDomains;";
 const DEFAULT_NGINX_X_FRAME_OPTIONS_HEADER: &str = "SAMEORIGIN";
+const DEFAULT_NGINX_PROXY_READ_TIMEOUT: &str = "1h";
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -76,6 +77,10 @@ pub struct NginxCommand {
     /// Value for the X-Frame-Options header.
     #[arg(long, env = "NGINX_X_FRAME_OPTIONS_HEADER", default_value_t = String::from(DEFAULT_NGINX_X_FRAME_OPTIONS_HEADER))]
     pub nginx_x_frame_options_header: String,
+
+    /// Value for the proxy read timeout. Default is `1h`.
+    #[arg(long, env = "NGINX_PROXY_READ_TIMEOUT", default_value_t = String::from(DEFAULT_NGINX_PROXY_READ_TIMEOUT))]
+    pub nginx_proxy_read_timeout: String,
 }
 
 #[derive(Args)]
@@ -165,6 +170,10 @@ mod tests {
         assert_eq!(cmd.nginx_access_control_allow_origin_header, None);
         assert!(!cmd.http_service.enable_http_redirect);
         assert!(!cmd.http_service.enable_http);
+        assert_eq!(
+            cmd.nginx_proxy_read_timeout,
+            DEFAULT_NGINX_PROXY_READ_TIMEOUT
+        );
     }
 
     #[test]
@@ -356,5 +365,16 @@ mod tests {
         let _env = WithEnv::new("NGINX_X_FRAME_OPTIONS_HEADER", "DENY");
         let cmd = parse_nginx_from(vec![]);
         assert_eq!(cmd.nginx_x_frame_options_header, "DENY");
+    }
+
+    #[test]
+    #[serial]
+    fn test_should_parse_nginx_proxy_read_timeout() {
+        let cmd = parse_nginx_from(vec!["--nginx-proxy-read-timeout", "30s"]);
+        assert_eq!(cmd.nginx_proxy_read_timeout, "30s");
+
+        let _env = WithEnv::new("NGINX_PROXY_READ_TIMEOUT", "30s");
+        let cmd = parse_nginx_from(vec![]);
+        assert_eq!(cmd.nginx_proxy_read_timeout, "30s");
     }
 }
