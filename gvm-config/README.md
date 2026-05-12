@@ -30,6 +30,7 @@ The following settings can be adjusted for the gvm-config service.
 | NGINX_CONTENT_SECURITY_POLICY_HEADER     | String  | [^1]                                    | Value for the Content-Security-Policy header                    |
 | NGINX_STRICT_TRANSPORT_SECURITY_HEADER   | String  | `max-age=31536000; includeSubDomains;`  | Value for the Strict-Transport-Security header.                 |
 | NGINX_X_FRAME_OPTIONS_HEADER             | String  | `SAMEORIGIN`                            | Value for the X-Frame-Options header                            |
+| NGINX_PROXY_READ_TIMEOUT                 | String  | `1h`                                    | Read timeout until a 504 Gateway Timeout is issued              |
 | ENABLE_NGINX_CONFIG                      | Boolean | false [^2]                              | Generate the nginx configuration                                |
 | ENABLE_TLS_GENERATION                    | Boolean | false [^2]                              | Generate self-signed TLS certificates                           |
 
