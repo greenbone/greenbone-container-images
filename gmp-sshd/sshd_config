@@ -67,8 +67,8 @@ TCPKeepAlive no
 # Brute Force / Session Limits
 # ==========================================
 
-MaxAuthTries 2
-MaxSessions 2
+MaxAuthTries 3
+MaxSessions 20
 LoginGraceTime 30
 
 ClientAliveInterval 300
