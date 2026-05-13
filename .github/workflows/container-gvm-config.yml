@@ -7,13 +7,13 @@ on:
     tags:
       - "v*"
     paths:
-      - gvm-config/*
+      - gvm-config/**
       - .github/workflows/container-gvm-config.yml
   pull_request:
     branches:
       - main
     paths:
-      - gvm-config/*
+      - gvm-config/**
       - .github/workflows/container-gvm-config.yml
   workflow_dispatch:
   schedule:
