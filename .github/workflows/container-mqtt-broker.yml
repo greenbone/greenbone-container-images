@@ -7,13 +7,13 @@ on:
     tags:
       - "v*"
     paths:
-      - mqtt-broker/*
+      - mqtt-broker/**
       - .github/workflows/container-mqtt-broker.yml
   pull_request:
     branches:
       - main
     paths:
-      - mqtt-broker/*
+      - mqtt-broker/**
       - .github/workflows/container-mqtt-broker.yml
   workflow_dispatch:
   schedule:

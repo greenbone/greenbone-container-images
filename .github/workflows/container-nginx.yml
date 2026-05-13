@@ -7,13 +7,13 @@ on:
     tags:
       - "v*"
     paths:
-      - nginx/*
+      - nginx/**
       - .github/workflows/container-nginx.yml
   pull_request:
     branches:
       - main
     paths:
-      - nginx/*
+      - nginx/**
       - .github/workflows/container-nginx.yml
   workflow_dispatch:
   schedule:

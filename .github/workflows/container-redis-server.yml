@@ -7,13 +7,13 @@ on:
     tags:
       - "v*"
     paths:
-      - redis-server/*
+      - redis-server/**
       - .github/workflows/container-redis-server.yml
   pull_request:
     branches:
       - main
     paths:
-      - redis-server/*
+      - redis-server/**
       - .github/workflows/container-redis-server.yml
   workflow_dispatch:
   schedule:

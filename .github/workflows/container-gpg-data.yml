@@ -7,13 +7,13 @@ on:
     tags:
       - "v*"
     paths:
-      - gpg-data/*
+      - gpg-data/**
       - .github/workflows/container-gpg-data.yml
   pull_request:
     branches:
       - main
     paths:
-      - gpg-data/*
+      - gpg-data/**
       - .github/workflows/container-gpg-data.yml
   workflow_dispatch:
   schedule:
