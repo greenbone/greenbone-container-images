@@ -72,13 +72,14 @@ fn main() {
                 );
                 std::process::exit(1);
             }
-            let tera = match Tera::new(&format!("{}/**/*.template", source.display())) {
-                Ok(t) => t,
+            let mut tera = Tera::default();
+            match tera.load_from_glob(&format!("{}/**/*.template", source.display())) {
+                Ok(_) => (),
                 Err(e) => {
                     println!("Error while parsing templates: {}", e);
                     std::process::exit(1);
                 }
-            };
+            }
             let mut has_error = false;
             for name in tera.get_template_names() {
                 let mut rendered_path = destination.join(name);
