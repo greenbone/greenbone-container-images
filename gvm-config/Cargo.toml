@@ -8,4 +8,4 @@ clap = { version = "4.6.1", features = ["derive", "env"] }
 tera = { version = "2.0.0", features = ["glob_fs"] }
 
 [dev-dependencies]
-serial_test = "3.5.0"
+serial_test = "4.0.1"
