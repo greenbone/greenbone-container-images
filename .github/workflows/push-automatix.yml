@@ -7,23 +7,9 @@ on:
     tags: ["v*"]
 
 jobs:
-  build-redis-server:
-    name: Push Redis Server to Automatix
-    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
-    with:
-      build-docker-file: ./redis-server/Dockerfile
-      build-context: ./redis-server
-      image-url: openvas-detect-dev/redis-server
-      image-labels: |
-        org.opencontainers.image.vendor=Greenbone
-        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
-        org.opencontainers.image.base.name=debian:stable-slim
-      service: openvas-redis
-    secrets: inherit
 
   build-gpg-data:
     name: Push GPG Data to Automatix
-    needs: build-redis-server
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
     with:
       build-docker-file: ./gpg-data/Dockerfile
@@ -34,6 +20,21 @@ jobs:
         org.opencontainers.image.documentation=https://greenbone.github.io/docs/
         org.opencontainers.image.base.name=busybox:stable
       service: openvas-gpg-data
+    secrets: inherit
+
+  build-redis-server:
+    name: Push Redis Server to Automatix
+    needs: build-gpg-data
+    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
+    with:
+      build-docker-file: ./redis-server/Dockerfile
+      build-context: ./redis-server
+      image-url: openvas-detect-dev/redis-server
+      image-labels: |
+        org.opencontainers.image.vendor=Greenbone
+        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
+        org.opencontainers.image.base.name=debian:stable-slim
+      service: openvas-redis
     secrets: inherit
 
   build-gsa-nginx:
