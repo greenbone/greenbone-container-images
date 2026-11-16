@@ -7,20 +7,6 @@ on:
     tags: ["v*"]
 
 jobs:
-  build-sshd:
-    name: Push GMP SSHD Container to Automatix
-    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
-    with:
-      build-docker-file: ./gmp-sshd/Dockerfile
-      build-context: ./gmp-sshd
-      image-url: openvas-scan-dev/gmp-sshd
-      image-labels: |
-        org.opencontainers.image.vendor=Greenbone
-        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
-        org.opencontainers.image.base.name=debian:stable-slim
-      service: openvas-gmp-sshd
-    secrets: inherit
-
   build-redis-server:
     name: Push Redis Server to Automatix
     uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
