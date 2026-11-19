@@ -36,20 +36,3 @@ jobs:
         org.opencontainers.image.base.name=debian:stable-slim
       service: openvas-redis
     secrets: inherit
-
-  build-gsa-nginx:
-    name: Push GSA Nginx to Automatix
-    needs:
-      - build-redis-server
-      - build-gpg-data
-    uses: greenbone/workflows/.github/workflows/container-build-push-2nd-gen.yml@main
-    with:
-      build-docker-file: ./nginx/Dockerfile
-      build-context: ./nginx
-      image-url: openvas-scan-dev/gsa-nginx
-      image-labels: |
-        org.opencontainers.image.vendor=Greenbone
-        org.opencontainers.image.documentation=https://greenbone.github.io/docs/
-        org.opencontainers.image.base.name=nginx:stable-trixie
-      service: openvas-gsa-nginx
-    secrets: inherit
